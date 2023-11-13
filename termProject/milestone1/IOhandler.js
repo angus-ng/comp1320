@@ -79,6 +79,14 @@ const grayScale = (pathIn, pathOut) => {
   })
 };
 
+/**
+ * Description: Read in png file by given pathIn,
+ * convert to sepia and write to given pathOut
+ *
+ * @param {string} filePath
+ * @param {string} pathProcessed
+ * @return {promise}
+ */
 const sepia = (pathIn, pathOut) => {
   const fileName = path.basename(pathIn);
   const destPath = path.join(pathOut, fileName)
@@ -101,6 +109,13 @@ const sepia = (pathIn, pathOut) => {
 })
 };
 
+/**
+ * Description: Takes an array of file objects
+ * filter array for files that have the extension .png
+ *
+ * @param {array} arrOfFiles
+ * @return {array}
+ */
 const filterPNGs = (arrOfFiles) => {
   const newArr = [];
   for (let index = 0; index < arrOfFiles.length; index++) {
@@ -113,6 +128,13 @@ const filterPNGs = (arrOfFiles) => {
   return newArr;
 }
 
+/**
+ * Description: Take an array of filtered file objects
+ * returns an array of paths to those objects
+ *
+ * @param {array} arrOfPNGs
+ * @return {array}
+ */
 const toPathsArr = (arrOfPNGs) => {
   const pathArr = [];
   for (let index = 0; index < arrOfPNGs.length; index++) {
@@ -121,7 +143,15 @@ const toPathsArr = (arrOfPNGs) => {
   return pathArr;
 }
 
-const applyFilterCalc = (pixels, filter) => { //takes arr of img pixels, filter is a string: "grayscale" or "sepia"
+/**
+ * Description: Take an array of image pixels and the type of filter to apply as a string
+ * returns a processed array of image pixels
+ *
+ * @param {array} pixels
+ * @param {string} filter //"grayscale" or "sepia"
+ * @return {array}
+ */
+const applyFilterCalc = (pixels, filter) => {
   return new Promise ((resolve, reject) => {
   const worker = new Worker("./worker-thread.js", {workerData: {pixels, filter}})
   worker.on("message", (newP) => resolve(newP))
@@ -129,6 +159,13 @@ const applyFilterCalc = (pixels, filter) => { //takes arr of img pixels, filter 
 })
 }
 
+/**
+ * Description: Takes a path as a string
+ * makes the path if it doesn't already exist
+ *
+ * @param {string} path
+ * @return {promise}
+ */
 const makeOutputFolder = (path) => {
   return fs.mkdir(path, {recursive: true})
   .catch((err) => console.log(err))
