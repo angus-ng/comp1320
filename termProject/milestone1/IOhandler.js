@@ -61,22 +61,22 @@ const grayScale = (pathIn, pathOut) => {
     const fileName = path.basename(pathIn);
     const destPath = path.join(pathOut, fileName)
     return new Promise ((resolve, reject) => {
-    makeOutputFolder(pathOut)
-    .then(() => { pipeline(createReadStream(pathIn),
-      new PNG()
-        .on("parsed", function () {
-        applyFilterCalc(this.data, "grayscale")
-        .then((data) => {this.data = data, 
-          this.pack()})
+      makeOutputFolder(pathOut)
+        .then(() => { pipeline(createReadStream(pathIn),
+          new PNG()
+            .on("parsed", function () {
+              applyFilterCalc(this.data, "grayscale")
+            .then((data) => {this.data = data, 
+              this.pack()})
+            .catch((err) => reject(err))
+          }), 
+          createWriteStream(destPath)),
+          resolve(),
+          (err) => {
+            reject(err)
+          }})
         .catch((err) => reject(err))
-      }), 
-      createWriteStream(destPath)),
-      resolve(),
-      (err) => {
-        reject(err)
-      }})
-    .catch((err) => reject(err))
-  })
+    })
 };
 
 /**
@@ -91,21 +91,21 @@ const sepia = (pathIn, pathOut) => {
   const fileName = path.basename(pathIn);
   const destPath = path.join(pathOut, fileName)
   return new Promise ((resolve, reject) => {
-  makeOutputFolder(pathOut)
-  .then(() => { pipeline(createReadStream(pathIn),
-    new PNG()
-      .on("parsed", function () {
-      applyFilterCalc(this.data, "sepia")
-      .then((data) => {this.data = data, 
-        this.pack()})
-      .catch((err) => reject(err))
-    }), 
-    createWriteStream(destPath)),
-    resolve(),
-    (err) => {
-      reject(err)
-    }})
-  .catch((err) => reject(err))
+    makeOutputFolder(pathOut)
+      .then(() => { pipeline(createReadStream(pathIn),
+        new PNG()
+          .on("parsed", function () {
+            applyFilterCalc(this.data, "sepia")
+          .then((data) => {this.data = data, 
+            this.pack()})
+          .catch((err) => reject(err))
+        }), 
+        createWriteStream(destPath)),
+        resolve(),
+        (err) => {
+          reject(err)
+        }})
+    .catch((err) => reject(err))
 })
 };
 
