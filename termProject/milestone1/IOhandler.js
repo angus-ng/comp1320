@@ -71,8 +71,7 @@ const applyFilter = (pathIn, pathOut, filter) => {
               this.pack()})
             .catch((err) => reject(err))
           }), 
-          createWriteStream(destPath)),
-          resolve(),
+          createWriteStream(destPath).on("finish", () => resolve())),
           (err) => {
             reject(err)
           }})
