@@ -51,13 +51,14 @@ const readDir = (dir) => {
 
 /**
  * Description: Read in png file by given pathIn,
- * convert to grayscale and write to given pathOut
+ * convert to grayscale or sepia and write to given pathOut
  *
  * @param {string} filePath
  * @param {string} pathProcessed
+ * @param {string} filter // "grayscale" or "sepia"
  * @return {promise}
  */
-const grayScale = (pathIn, pathOut) => {
+const applyFilter = (pathIn, pathOut, filter) => {
     const fileName = path.basename(pathIn);
     const destPath = path.join(pathOut, fileName)
     return new Promise ((resolve, reject) => {
@@ -65,7 +66,7 @@ const grayScale = (pathIn, pathOut) => {
         .then(() => { pipeline(createReadStream(pathIn),
           new PNG()
             .on("parsed", function () {
-              applyFilterCalc(this.data, "grayscale")
+              applyFilterCalc(this.data, filter)
             .then((data) => {this.data = data, 
               this.pack()})
             .catch((err) => reject(err))
@@ -77,36 +78,6 @@ const grayScale = (pathIn, pathOut) => {
           }})
         .catch((err) => reject(err))
     })
-};
-
-/**
- * Description: Read in png file by given pathIn,
- * convert to sepia and write to given pathOut
- *
- * @param {string} filePath
- * @param {string} pathProcessed
- * @return {promise}
- */
-const sepia = (pathIn, pathOut) => {
-  const fileName = path.basename(pathIn);
-  const destPath = path.join(pathOut, fileName)
-  return new Promise ((resolve, reject) => {
-    makeOutputFolder(pathOut)
-      .then(() => { pipeline(createReadStream(pathIn),
-        new PNG()
-          .on("parsed", function () {
-            applyFilterCalc(this.data, "sepia")
-          .then((data) => {this.data = data, 
-            this.pack()})
-          .catch((err) => reject(err))
-        }), 
-        createWriteStream(destPath)),
-        resolve(),
-        (err) => {
-          reject(err)
-        }})
-    .catch((err) => reject(err))
-})
 };
 
 /**
@@ -174,6 +145,5 @@ const makeOutputFolder = (path) => {
 module.exports = {
   unzip,
   readDir,
-  grayScale,
-  sepia
+  applyFilter
 };

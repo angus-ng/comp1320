@@ -17,10 +17,10 @@ const pathProcessed2 = path.join(__dirname, "sepia");
 
 IOhandler.unzip(zipFilePath, pathUnzipped)
 .then(() => IOhandler.readDir(pathUnzipped))
-.then((pathArr) => Promise.all([IOhandler.grayScale(pathArr[0], pathProcessed), 
-                                IOhandler.grayScale(pathArr[1], pathProcessed), 
-                                IOhandler.grayScale(pathArr[2], pathProcessed),
-                                IOhandler.sepia(pathArr[0], pathProcessed2), 
-                                IOhandler.sepia(pathArr[1], pathProcessed2), 
-                                IOhandler.sepia(pathArr[2], pathProcessed2)]).then(() => console.log("All images had sepia and grayscale applied")))
+.then((pathArr) => Promise.all([IOhandler.applyFilter(pathArr[0], pathProcessed, "grayscale"), 
+                                IOhandler.applyFilter(pathArr[1], pathProcessed, "grayscale"), 
+                                IOhandler.applyFilter(pathArr[2], pathProcessed, "grayscale"),
+                                IOhandler.applyFilter(pathArr[0], pathProcessed2, "sepia"), 
+                                IOhandler.applyFilter(pathArr[1], pathProcessed2, "sepia"), 
+                                IOhandler.applyFilter(pathArr[2], pathProcessed2, "sepia")]).then(() => console.log("All images had sepia and grayscale applied")))
 .catch((err) => console.log(err))
