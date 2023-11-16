@@ -53,8 +53,8 @@ const readDir = (dir) => {
  * Description: Read in png file by given pathIn,
  * convert to grayscale or sepia and write to given pathOut
  *
- * @param {string} filePath
- * @param {string} pathProcessed
+ * @param {string} pathIn
+ * @param {string} pathOut
  * @param {string} filter // "grayscale" or "sepia"
  * @return {promise}
  */
