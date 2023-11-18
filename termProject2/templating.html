@@ -27,8 +27,6 @@
             align-content:space-around;
             gap: 1rem 1rem;
         }
-        .user-card-container{
-        }
         .user-card{
             display:grid;
             min-width:21rem;
@@ -102,7 +100,6 @@
     </head>
     <main>
         <section class="userbase-container">
-            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -120,8 +117,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -139,7 +134,6 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -157,7 +151,6 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -175,7 +168,6 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -193,7 +185,6 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -211,7 +202,6 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -229,7 +219,6 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div class="user-card-container">
                 <div class="user-card">
                     <div class="profile-picture-container">
                         <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
@@ -247,7 +236,24 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
         </section>
     </main>
     <footer>
