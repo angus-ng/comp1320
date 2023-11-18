@@ -4,76 +4,247 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <style>
+        :root{
+            --main-text-color:#fffaff;
+            --main-bg-color:#0B132B;
+            --main-primary-color:#82D9D0;
+            --main-secondary-color:#314172;
+            --main-accent-color:#C382F2;
+        }
+        body{
+            background-color:var(--main-bg-color);
+            color:var(--main-text-color);
+            font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+        }
+
         .userbase-container{
             display:flex;
             flex-wrap:wrap;
+            align-content:space-around;
+            gap: 1rem 1rem;
+        }
+        .user-card-container{
         }
         .user-card{
             display:grid;
-            max-width:26rem;
-            max-height:15rem;
-            background-color:blue;
+            min-width:21rem;
+            min-height:11rem;
+            background: linear-gradient(-20deg, var(--main-accent-color), var(--main-primary-color));
             border-radius: 8px;
             grid-template-columns:repeat(2, 50%);
         }
         .button-container{
+            background-color: #31417280;
             display:grid;
-            width:100%;
-            height:100%;
+            grid-template-columns:100%;
+            min-width:100%;
+            min-height:100%;
             grid-column-start:2;
             grid-column-end:3;
-            background-color:purple;
+            align-content:center;
             align-items:center;
             justify-items:center;
+            row-gap:15%;
         }
         .profile-picture-container{
+            min-width:100%;
+            min-height:100%;
             display:grid;
-            width:100%;
-            height:100%;
             grid-column-start:1;
             grid-column-end:2;
             align-items:center;
             justify-items:center;
         }
         .profile-picture-container img{
-            width:80%;
-            height:80%;
+            width:152px;
+            height:152px;
             border-radius: 50%;
-
+            align-self:center;
         }
-        button{
-            color:black;
-            background-color:white;
+        .uploadButton button{
+            text-align:center;
+            color:var(--main-bg-color);
+            background-color:var(--main-primary-color);
+            border: none;
+	        box-shadow: 2px -2px 6px rgba(196, 237, 233, 0.5), -2px 2px 6px rgba(79, 201, 189, 0.5);
             width:6rem;
             height:2rem;
             border-radius:4px;
         }
-        button:hover{
-            color:white;
-            background-color:black;
+        .uploadButton button:hover{
+            background-color:#5cccc1;
+            border:none;
+        }
+        .profileButton button{
+            text-align:center;
+            color:var(--main-bg-color);
+            background-color:var(--main-accent-color);
+            border: none;
+	        box-shadow: 2px -2px 6px rgba(222, 186, 247, 0.5), -2px 2px 6px #9b2fe980;
+            width:6rem;
+            height:2rem;
+            border-radius:4px;
+        }
+        .profileButton button:hover{
+            color:var(--main-bg-color);
+            background: rgb(173, 84, 237);
+            border:none;
         }
     </style>
 </head>
 <body>
     <head>
+        <h1>Users</h1>
     </head>
     <main>
         <section class="userbase-container">
-            <div class="user-card">
-                <div class="profile-picture-container">
-                    <img src="/src/photos/john123/profile.jpeg">
-                </div>
-                <div class="button-container">
-                    <div class="button">
-                        <form action="/api/upload" method="POST">
-                            <button type="submit">Upload</button>
-                        </form>
+            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
                     </div>
-                    <div class="button">
-                        <form action="/feed:get" method="POST">
-                            <button type="submit">Username</button>
-                        </form>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            <div class="user-card-container">
+                <div class="user-card">
+                    <div class="profile-picture-container">
+                        <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed:get" method="POST">
+                                <button type="submit">Username</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

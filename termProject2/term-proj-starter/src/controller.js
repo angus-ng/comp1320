@@ -14,93 +14,133 @@ const controller = {
     const pfpPath = path.join("photos", userObj.username, userObj.profile);
     const pfpSrc = new URL(`file:///${pfpPath}`).href.substring(7);
     userCards = userCards + `<div class="user-card">
-    <div class="profile-picture-container">
-        <img src="${pfpSrc}">
-    </div>
-    <div class="button-container">
-        <div class="button">
-            <form action="/api/upload" method="POST">
-                <button type="submit">Upload</button>
-            </form>
-        </div>
-        <div class="button">
-            <form action="/feed" method="get">
-                <button type="submit" name="username"value="${userObj.username}">${userObj.username}</button>
-            </form>
-        </div>
-    </div>
-    </div>`})
+                    <div class="profile-picture-container">
+                        <img src="${pfpSrc}">
+                    </div>
+                    <div class="button-container">
+                        <div class="uploadButton">
+                            <form action="/api/upload" method="POST">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                        <div class="profileButton">
+                            <form action="/feed" method="GET">
+                                <button type="submit" name="username"value="${userObj.username}">${userObj.username}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>`})
     //console.log(userArray);
     return response.end(`
     <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <style>
-        .userbase-container{
-            display:flex;
-            flex-wrap:wrap;
-        }
-        .user-card{
-            display:grid;
-            max-width:26rem;
-            max-height:15rem;
-            background-color:blue;
-            border-radius: 8px;
-            grid-template-columns:repeat(2, 50%);
-        }
-        .button-container{
-            display:grid;
-            width:100%;
-            height:100%;
-            grid-column-start:2;
-            grid-column-end:3;
-            background-color:purple;
-            align-items:center;
-            justify-items:center;
-        }
-        .profile-picture-container{
-            display:grid;
-            width:100%;
-            height:100%;
-            grid-column-start:1;
-            grid-column-end:2;
-            align-items:center;
-            justify-items:center;
-        }
-        .profile-picture-container img{
-            width:80%;
-            height:80%;
-            border-radius: 50%;
-
-        }
-        button{
-            color:black;
-            background-color:white;
-            width:6rem;
-            height:2rem;
-            border-radius:4px;
-        }
-        button:hover{
-            color:white;
-            background-color:black;
-        }
-    </style>
-</head>
-<body>
+    <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <style>
+            :root{
+                --main-text-color:#fffaff;
+                --main-bg-color:#0B132B;
+                --main-primary-color:#82D9D0;
+                --main-secondary-color:#314172;
+                --main-accent-color:#C382F2;
+            }
+            body{
+                background-color:var(--main-bg-color);
+                color:var(--main-text-color);
+                font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+            }
+    
+            .userbase-container{
+                display:flex;
+                flex-wrap:wrap;
+                align-content:space-around;
+                gap: 1rem 1rem;
+            }
+            .user-card{
+                display:grid;
+                min-width:21rem;
+                min-height:11rem;
+                background: linear-gradient(-20deg, var(--main-accent-color), var(--main-primary-color));
+                border-radius: 8px;
+                grid-template-columns:repeat(2, 50%);
+            }
+            .button-container{
+                background-color: #31417280;
+                display:grid;
+                grid-template-columns:100%;
+                min-width:100%;
+                min-height:100%;
+                grid-column-start:2;
+                grid-column-end:3;
+                align-content:center;
+                align-items:center;
+                justify-items:center;
+                row-gap:15%;
+            }
+            .profile-picture-container{
+                min-width:100%;
+                min-height:100%;
+                display:grid;
+                grid-column-start:1;
+                grid-column-end:2;
+                align-items:center;
+                justify-items:center;
+            }
+            .profile-picture-container img{
+                width:152px;
+                height:152px;
+                border-radius: 50%;
+                align-self:center;
+            }
+            .uploadButton button{
+                text-align:center;
+                color:var(--main-bg-color);
+                background-color:var(--main-primary-color);
+                border: none;
+                box-shadow: 2px -2px 6px rgba(196, 237, 233, 0.5), -2px 2px 6px rgba(79, 201, 189, 0.5);
+                width:6rem;
+                height:2rem;
+                border-radius:4px;
+            }
+            .uploadButton button:hover{
+                background-color:#5cccc1;
+                border:none;
+            }
+            .profileButton button{
+                text-align:center;
+                color:var(--main-bg-color);
+                background-color:var(--main-accent-color);
+                border: none;
+                box-shadow: 2px -2px 6px rgba(222, 186, 247, 0.5), -2px 2px 6px #9b2fe980;
+                width:6rem;
+                height:2rem;
+                border-radius:4px;
+            }
+            .profileButton button:hover{
+                color:var(--main-bg-color);
+                background: rgb(173, 84, 237);
+                border:none;
+            }
+        </style>
     </head>
-    <main>
-        <section class="userbase-container">
-            ${userCards}
-        </section>
-    </main>
-    <footer>
-    </footer>
-</body>
-</html>`);
+    <body>
+        <head>
+            <h1>Users</h1>
+        </head>
+        <main>
+            <section class="userbase-container">
+                ${userCards}
+            </section>
+        </main>
+        <footer>
+        </footer>
+    </body>
+    </html>`);
   },
   sendFormData: (request, response) => {
     var body = "";
