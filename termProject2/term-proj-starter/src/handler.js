@@ -22,7 +22,9 @@ const allRoutes = {
   "/feed:get": (request, response) => {
     controller.getFeed(request, response);
   },
-
+  "/photos:get": (request, response) => {
+    controller.getPhoto(request, response);
+  },
   // 404 routes
   default: (request, response) => {
     response.writeHead(404, DEFAULT_HEADER);
@@ -35,11 +37,15 @@ const allRoutes = {
 function handler(request, response) {
   const { url, method } = request;
 
-  const { pathname } = parse(url, true);
+  let { pathname } = parse(url, true);
+  if (url.includes("/photos/")){
+    pathname = "/photos"
+  }
 
+  //console.log(pathname)
   const key = `${pathname}:${method.toLowerCase()}`;
   const chosen = allRoutes[key] || allRoutes.default;
-
+  //console.log(chosen)
   return Promise.resolve(chosen(request, response)).catch(
     handlerError(response)
   );

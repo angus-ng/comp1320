@@ -2,6 +2,9 @@ const fs = require("fs").promises;
 const { DEFAULT_HEADER } = require("./util/util");
 const path = require("path");
 var qs = require("querystring");
+const { createReadStream, createWriteStream, Readable } = require("fs");
+const { pipeline } = require("stream/promises");
+const { fileURLToPath, pathToFileURL } = require("url");
 
 const controller = {
   getHomePage: async (request, response) => {
@@ -9,8 +12,8 @@ const controller = {
     const userArray = JSON.parse(database);
     let userCards = ""
     userArray.forEach((userObj) => {console.log(userObj.username);
-    console.log(path.join("photos", userObj.username, userObj.profile));
-    let pfpSrc = path.join("photos", userObj.username, userObj.profile);
+    const pfpPath = path.join("photos", userObj.username, userObj.profile);
+    const pfpSrc = new URL(`file:///${pfpPath}`).href.substring(7);
     userCards = userCards + `<div class="user-card">
     <div class="profile-picture-container">
         <img src="${pfpSrc}">
@@ -22,8 +25,8 @@ const controller = {
             </form>
         </div>
         <div class="button">
-            <form action="/feed:get" method="POST">
-                <button type="submit">${userObj.username}</button>
+            <form action="/feed" method="get">
+                <button type="submit" name="username"value="${userObj.username}">${userObj.username}</button>
             </form>
         </div>
     </div>
@@ -39,6 +42,7 @@ const controller = {
     <style>
         .userbase-container{
             display:flex;
+            flex-wrap:wrap;
         }
         .user-card{
             display:grid;
@@ -74,7 +78,7 @@ const controller = {
 
         }
         button{
-            color:black
+            color:black;
             background-color:white;
             width:6rem;
             height:2rem;
@@ -112,8 +116,15 @@ const controller = {
     });
   },
 
-  getFeed: (request, response) => {
+  getFeed: async (request, response) => {
     // console.log(request.url); try: http://localhost:3000/feed?username=john123
+    let currentUser = qs.parse(request.url.split("?")[1]);
+    const database = await fs.readFile("../database/data.json", "utf-8");
+    const userArray = JSON.parse(database);
+    userArray.forEach((userObj) => {if (userObj.username === currentUser.username){
+        currentUser = userObj;
+    }});
+    console.log(currentUser);
     response.write(`
     <html>
     <head>
@@ -499,7 +510,7 @@ const controller = {
 
 			<div class="profile-user-settings">
 
-				<h1 class="profile-user-name">janedoe_</h1>
+				<h1 class="profile-user-name">${currentUser.username}</h1>
 
 				<button class="btn profile-edit-btn">Edit Profile</button>
 
@@ -510,16 +521,16 @@ const controller = {
 			<div class="profile-stats">
 
 				<ul>
-					<li><span class="profile-stat-count">164</span> posts</li>
-					<li><span class="profile-stat-count">188</span> followers</li>
-					<li><span class="profile-stat-count">206</span> following</li>
+					<li><span class="profile-stat-count">${currentUser.stats.posts}</span> posts</li>
+					<li><span class="profile-stat-count">${currentUser.stats.followers}</span> followers</li>
+					<li><span class="profile-stat-count">${currentUser.stats.following}</span> following</li>
 				</ul>
 
 			</div>
 
 			<div class="profile-bio">
 
-				<p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit</p>
+				<p><span class="profile-real-name">${currentUser.username}</span> ${currentUser.description}</p>
 
 			</div>
 
@@ -780,6 +791,22 @@ const controller = {
       </form>
     `);
   },
+
+  getPhoto: async (request, response) => {
+    console.log("I RAN");
+    console.log(request.url)
+    let headerType = {};
+    if(path.extname(request.url) === ".jpeg"){
+        headerType = {'Content-Type': 'image/jpeg'};
+    } else if (path.extname(request.url) === ".png"){
+        headerType = {'Content-Type': 'image/png'}
+    }
+    response.writeHead(200, headerType)
+    fs.readFile(__dirname + request.url)
+    .then((data) => {response.end(data)})
+
+    
+  }
 };
 
 module.exports = controller;
