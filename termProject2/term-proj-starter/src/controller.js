@@ -4,7 +4,6 @@ const path = require("path");
 var qs = require("querystring");
 const { createReadStream, createWriteStream, Readable } = require("fs");
 const { pipeline } = require("stream/promises");
-const { fileURLToPath, pathToFileURL } = require("url");
 
 const controller = {
   getHomePage: async (request, response) => {
@@ -125,6 +124,8 @@ const controller = {
         currentUser = userObj;
     }});
     console.log(currentUser);
+    const pfpPath = path.join("photos", currentUser.username, currentUser.profile);
+    const pfpSrc = new URL(`file:///${pfpPath}`).href.substring(7)
     response.write(`
     <html>
     <head>
@@ -444,6 +445,10 @@ const controller = {
         .profile-image {
             grid-row: 1 / -1;
         }
+        .profile-image img{
+            width:152px;
+            height:152px;
+        }
 
         .gallery {
             display: grid;
@@ -504,7 +509,7 @@ const controller = {
 
 			<div class="profile-image">
 
-				<img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
+				<img src="${pfpSrc}" alt="">
 
 			</div>
 
