@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const { DEFAULT_HEADER } = require("./util/util");
 const path = require("path");
 var qs = require("querystring");
-const { createReadStream, createWriteStream, Readable } = require("fs");
+const { createReadStream, createWriteStream } = require("fs");
 const { pipeline } = require("stream/promises");
 
 const controller = {
@@ -10,7 +10,7 @@ const controller = {
     const database = await fs.readFile("../database/data.json", "utf-8");
     const userArray = JSON.parse(database);
     let userCards = ""
-    userArray.forEach((userObj) => {console.log(userObj.username);
+    userArray.forEach((userObj) => {
     const pfpPath = path.join("photos", userObj.username, userObj.profile);
     const pfpSrc = new URL(`file:///${pfpPath}`).href.substring(7);
     userCards = userCards + `<div class="user-card">
@@ -838,8 +838,7 @@ const controller = {
   },
 
   getPhoto: async (request, response) => {
-    console.log("I RAN");
-    console.log(request.url)
+    //console.log(request.url)
     let headerType = {};
     if(path.extname(request.url) === ".jpeg"){
         headerType = {'Content-Type': 'image/jpeg'};
@@ -847,10 +846,9 @@ const controller = {
         headerType = {'Content-Type': 'image/png'}
     }
     response.writeHead(200, headerType)
-    fs.readFile(__dirname + request.url)
-    .then((data) => {response.end(data)})
-
-    
+    const readImage = await createReadStream(__dirname + request.url).pipe(response);
+    readImage.on("error", (err) => console.log(err));
+    readImage.on("end", () => response.end());
   }
 };
 

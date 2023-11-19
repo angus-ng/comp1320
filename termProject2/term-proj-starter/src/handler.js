@@ -38,7 +38,7 @@ function handler(request, response) {
   const { url, method } = request;
 
   let { pathname } = parse(url, true);
-  if (url.includes("/photos/")){
+  if (path.extname(url) === ".png" || path.extname(url) === ".jpeg"){
     pathname = "/photos"
   }
 
