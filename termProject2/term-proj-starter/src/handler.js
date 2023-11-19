@@ -22,6 +22,7 @@ const allRoutes = {
   "/feed:get": (request, response) => {
     controller.getFeed(request, response);
   },
+  // GET: localhost:3000/photos
   "/photos:get": (request, response) => {
     controller.getPhoto(request, response);
   },
@@ -36,10 +37,15 @@ const allRoutes = {
 
 function handler(request, response) {
   const { url, method } = request;
-
+  console.log(response.statusCode)
   let { pathname } = parse(url, true);
   if (path.extname(url) === ".png" || path.extname(url) === ".jpeg"){
-    pathname = "/photos"
+    if (method === "GET"){
+      pathname = "/photos";
+    }
+  }
+  if (url.includes("/images?")){
+    pathname = "/images"
   }
 
   //console.log(pathname)
