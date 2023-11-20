@@ -23,10 +23,9 @@ const controller = {
                     </div>
                     <div class="button-container">
                         <div class="uploadButton">
-                            <form id="uploadImage" action="/images?${userObj.username}" enctype="multipart/form-data" method="POST">
-                                <input type="text" name="username" value="${userObj.username}" style="display:none; readonly">
-                                <input type="file" id="hiddenButton" name="uploadedImage" accept="image/png" onChange="document.getElementById('uploadImage').submit();" style="display:none;"/>
-                                <button type="button" onclick="document.getElementById('hiddenButton').click();">Upload</button>
+                            <form id="upload${userObj.username}" action="/images?${userObj.username}" enctype="multipart/form-data" method="POST">
+                                <input type="file" id="hiddenButton${userObj.username}" name="uploadedImage" accept="image/png" onChange="document.getElementById('upload${userObj.username}').submit();" style="display:none;"/>
+                                <button type="button" onclick="document.getElementById('hiddenButton${userObj.username}').click();">Upload</button>
 
                             </form>
                         </div>
@@ -678,7 +677,7 @@ const controller = {
             .then(() => fs.writeFile(dbPath, JSON.stringify(newDatabase, null, 2)))
             .catch((err) => console.log(err))
         })
-        console.log (fields);
+        console.log(fields);
         [fields, files] = await form.parse(request)
         console.log(fields);
         console.log(files.uploadedImage[0].originalFilename)

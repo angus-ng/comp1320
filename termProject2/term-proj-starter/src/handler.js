@@ -37,7 +37,8 @@ const allRoutes = {
 
 function handler(request, response) {
   const { url, method } = request;
-  console.log(response.statusCode)
+  //console.log(response.statusCode)
+  console.log("THIS ONE:" + url);
   let { pathname } = parse(url, true);
   if (path.extname(url) === ".png" || path.extname(url) === ".jpeg"){
     if (method === "GET"){
