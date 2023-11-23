@@ -663,15 +663,18 @@ const controller = {
         form.on("end", (name, file) => {
             fs.readFile(dbPath, "utf-8")
             .then ((database) => {
-                let userArray = JSON.parse(database);
-                userArray.forEach((userObj) => {
-                    if (userObj.username === currentUser){
-                        userObj.photos.push(files.uploadedImage[0].originalFilename);
-                        newDatabase.push(userObj);
-                    } else {
-                        newDatabase.push(userObj);
-                    }
-                })
+                newDatabase = JSON.parse(database);
+                let currentUserIndex = newDatabase.findIndex((element) => (element.username === currentUser))
+                //console.log(currentUserIndex)
+                newDatabase[currentUserIndex].photos.push(files.uploadedImage[0].originalFilename);
+                // userArray.forEach((userObj) => {
+                //     if (userObj.username === currentUser){
+                //         userObj.photos.push(files.uploadedImage[0].originalFilename);
+                //         newDatabase.push(userObj);
+                //     } else {
+                //         newDatabase.push(userObj);
+                //     }
+                // })
             })
             .then(() => console.log("my new database is " + JSON.stringify(newDatabase)))
             .then(() => fs.writeFile(dbPath, JSON.stringify(newDatabase, null, 2)))
