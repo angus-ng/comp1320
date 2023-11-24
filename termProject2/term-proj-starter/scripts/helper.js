@@ -19,6 +19,10 @@ async function uploadImage (currentUser, imageName) {
     await fs.writeFile(dbPath, JSON.stringify(newDatabase, null, 2));
 }
 
+async function readFile (path, encoding) {
+    return await fs.readFile(path, encoding)
+}
+
 const parseQS = (url) => {
     return qs.parse(url.split("?")[1]);
 } 
@@ -52,4 +56,4 @@ const routeHelper = (url, method) => {
         return pathname;
       }
 }
-module.exports = {readDatabase, uploadImage, parseQS, imgSrc, findUserIndex, getExt, routeHelper};
+module.exports = {readDatabase, uploadImage, parseQS, imgSrc, findUserIndex, getExt, routeHelper, readFile};
