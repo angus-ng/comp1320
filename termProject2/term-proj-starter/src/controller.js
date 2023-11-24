@@ -677,9 +677,9 @@ const controller = {
     //console.log(request.url)
     let headerType = {};
     if(path.extname(request.url).toLowerCase() === ".jpeg"){
-        headerType = {'Content-Type': 'image/jpeg'};
+        headerType = helper.MIME.jpeg;
     } else if (path.extname(request.url).toLowerCase() === ".png"){
-        headerType = {'Content-Type': 'image/png'}
+        headerType = helper.MIME.png;
     }
     response.writeHead(200, headerType)
     const readImage = await createReadStream(__dirname + request.url).pipe(response);

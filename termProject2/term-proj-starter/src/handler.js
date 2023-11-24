@@ -46,7 +46,7 @@ function handler(request, response) {
     }
   }
   if (url.includes("/images?")){
-    pathname = "/images"
+    pathname = "/images";
   }
 
   //console.log(pathname)
