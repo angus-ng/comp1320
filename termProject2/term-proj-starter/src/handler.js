@@ -1,8 +1,8 @@
-const { parse } = require("url");
 const { DEFAULT_HEADER } = require("./util/util.js");
 const controller = require("./controller");
 const { createReadStream } = require("fs");
 const path = require("path");
+const { routeHelper } = require("../scripts/helper.js");
 
 const allRoutes = {
   // GET: localhost:3000/
@@ -37,17 +37,7 @@ const allRoutes = {
 
 function handler(request, response) {
   const { url, method } = request;
-  //console.log(response.statusCode)
-  console.log("THIS ONE:" + url);
-  let { pathname } = parse(url, true);
-  if (path.extname(url).toLowerCase() === ".png" || path.extname(url).toLowerCase() === ".jpeg"){
-    if (method === "GET"){
-      pathname = "/photos";
-    }
-  }
-  if (url.includes("/images?")){
-    pathname = "/images";
-  }
+  const pathname = routeHelper(url, method);
 
   //console.log(pathname)
   const key = `${pathname}:${method.toLowerCase()}`;

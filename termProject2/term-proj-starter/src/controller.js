@@ -1,27 +1,26 @@
 const { DEFAULT_HEADER } = require("./util/util");
-const path = require("path");
-var qs = require("querystring");
-const { createReadStream, createWriteStream } = require("fs");
+const qs = require("querystring");
+const { createReadStream } = require("fs");
 const { formidable } = require("formidable");
-const formidableErrors = require("formidable").errors
-const helper = require("../scripts/helper.js")
-
+const formidableErrors = require("formidable").errors;
+const helper = require("../scripts/helper.js");
+const { MIME } = require("../scripts/MIME.js");
+const path = require("path");
 
 const controller = {
   getHomePage: async (request, response) => {
     const userArray = await helper.readDatabase();
     //console.log(userArray);
-    let userCards = ""
+    let userCards = "";
     userArray.forEach((userObj) => {
-    const pfpPath = path.join("photos", userObj.username, userObj.profile);
-    const pfpSrc = new URL(`file:///${pfpPath}`).href.substring(7);
+    const pfpSrc = helper.imgSrc(userObj.username, userObj.profile);
     userCards = userCards + `<div class="user-card">
                     <div class="profile-picture-container">
                         <img src="${pfpSrc}">
                     </div>
                     <div class="button-container">
                         <div class="uploadButton">
-                            <form id="upload${userObj.username}" action="/images?${userObj.username}" enctype="multipart/form-data" method="POST">
+                            <form id="upload${userObj.username}" action="/images?username=${userObj.username}" enctype="multipart/form-data" method="POST">
                                 <input type="file" id="hiddenButton${userObj.username}" name="uploadedImage" accept="image/png" onChange="document.getElementById('upload${userObj.username}').submit();" style="display:none;"/>
                                 <button type="button" onclick="document.getElementById('hiddenButton${userObj.username}').click();">Upload</button>
 
@@ -161,22 +160,19 @@ const controller = {
 
   getFeed: async (request, response) => {
     // console.log(request.url); try: http://localhost:3000/feed?username=john123
-    console.log("IM HERE" + request.url);
-    let currentUser = qs.parse(request.url.split("?")[1]);
-    
-    const userArray = await helper.readDatabase();
-    userArray.forEach((userObj) => {if (userObj.username === currentUser.username){
-        currentUser = userObj;
-    }});
+    //console.log("IM HERE" + request.url);
+    let currentUser = helper.parseQS(request.url).username;
     console.log(currentUser);
-    const currentUserPhotoPath = path.join("photos", currentUser.username);
-    const pfpPath = path.join(currentUserPhotoPath, currentUser.profile);
-    const pfpSrc = new URL(`file:///${pfpPath}`).href.substring(7);
+
+    const userArray = await helper.readDatabase();
+    currentUser = userArray[helper.findUserIndex(currentUser, userArray)];
+
+    console.log(currentUser);
+    const pfpSrc = helper.imgSrc(currentUser.username, currentUser.profile);
    
     let imgGallery = "";
     currentUser.photos.forEach((photo) => {
-        const userImagePath = path.join(currentUserPhotoPath, photo);
-        const userImageSrc = new URL(`file:///${userImagePath}`).href.substring(7);
+        const userImageSrc = helper.imgSrc(currentUser.username, photo);
         imgGallery = imgGallery + `<div class="gallery-item" tabindex="0">
         <img src="${userImageSrc}" class="gallery-image" alt="">
         <div class="gallery-item-info">
@@ -633,53 +629,38 @@ const controller = {
   },
 
   uploadImages: async (request, response) => {
-    // show a file upload form
-    //console.log(request);
-    let currentUser = request.url.split("?")[1];
+    const currentUser = helper.parseQS(request.url).username;
     let fileName = "";
     const form = formidable({});
     let fields;
     let files;
     try {
         form.on("fileBegin", (name, file) => {
-            file.filepath = path.join(__dirname, "photos", currentUser, file.originalFilename);
+            file.filepath = helper.imgSrc(currentUser, file.originalFilename, 0);
             fileName = file.originalFilename;
         })
         form.on("end", (name, file) => {
-            try{
-                helper.uploadImage(currentUser, fileName);
-            } catch (err) {
-                console.log(err)
-            }
+            helper.uploadImage(currentUser, fileName);
         })
-        console.log(fields);
-        [fields, files] = await form.parse(request)
-        console.log(fields);
-        console.log(files.uploadedImage[0].originalFilename)
+        [fields, files] = await form.parse(request);
     } catch (err) {
-        // example to check for a very specific error
-        if (err.code === formidableErrors.maxFieldsExceeded) {
-
-        }
         console.error(err);
-        response.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+        response.writeHead(err.httpCode || 400, { 'Content-Type': MIME.txt });
         response.end(String(err));
         return;
     }
-    //response.writeHead(200, { 'Content-Type': 'application/json' });
-    //response.end(JSON.stringify({ fields, files }, null, 2));
     response.writeHead(303, { 'Location': '/' });
     response.end();
     return;
   },
 
   getPhoto: async (request, response) => {
-    //console.log(request.url)
-    let headerType = {};
-    if(path.extname(request.url).toLowerCase() === ".jpeg"){
-        headerType = helper.MIME.jpeg;
-    } else if (path.extname(request.url).toLowerCase() === ".png"){
-        headerType = helper.MIME.png;
+    const imgExt = helper.getExt(request.url);
+    const headerType = {};
+    if(imgExt === ".jpeg"){
+        headerType["Content-Type"] = MIME.jpeg;
+    } else if (imgExt === ".png"){
+        headerType["Content-Type"] = MIME.png;
     }
     response.writeHead(200, headerType)
     const readImage = await createReadStream(__dirname + request.url).pipe(response);
