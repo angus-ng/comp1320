@@ -2,7 +2,6 @@ const { DEFAULT_HEADER } = require("./util/util");
 const qs = require("querystring");
 const { createReadStream } = require("fs");
 const { formidable } = require("formidable");
-const formidableErrors = require("formidable").errors;
 const helper = require("../scripts/helper.js");
 const { MIME } = require("../scripts/MIME.js");
 const path = require("path");
@@ -646,12 +645,10 @@ const controller = {
     } catch (err) {
         console.error(err);
         response.writeHead(err.httpCode || 400, { 'Content-Type': MIME.txt });
-        response.end(String(err));
-        return;
+        return response.end(String(err));
     }
     response.writeHead(303, { 'Location': '/' });
-    response.end();
-    return;
+    return response.end();
   },
 
   getPhoto: async (request, response) => {
