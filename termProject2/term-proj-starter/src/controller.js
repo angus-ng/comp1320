@@ -1,18 +1,16 @@
-const fs = require("fs").promises;
 const { DEFAULT_HEADER } = require("./util/util");
 const path = require("path");
 var qs = require("querystring");
 const { createReadStream, createWriteStream } = require("fs");
-const { pipeline } = require("stream/promises");
-const dbPath = "../database/data.json"
 const { formidable } = require("formidable");
 const formidableErrors = require("formidable").errors
+const helper = require("../scripts/helper.js")
 
 
 const controller = {
   getHomePage: async (request, response) => {
-    const database = await fs.readFile(dbPath, "utf-8");
-    const userArray = JSON.parse(database);
+    const userArray = await helper.readDatabase();
+    //console.log(userArray);
     let userCards = ""
     userArray.forEach((userObj) => {
     const pfpPath = path.join("photos", userObj.username, userObj.profile);
@@ -163,11 +161,10 @@ const controller = {
 
   getFeed: async (request, response) => {
     // console.log(request.url); try: http://localhost:3000/feed?username=john123
-    console.log("IM HERERERERERERE" + request.url);
+    console.log("IM HERE" + request.url);
     let currentUser = qs.parse(request.url.split("?")[1]);
-    console.log("HERE")
-    const database = await fs.readFile(dbPath, "utf-8");
-    const userArray = JSON.parse(database);
+    
+    const userArray = await helper.readDatabase();
     userArray.forEach((userObj) => {if (userObj.username === currentUser.username){
         currentUser = userObj;
     }});
@@ -638,47 +635,22 @@ const controller = {
   uploadImages: async (request, response) => {
     // show a file upload form
     //console.log(request);
-    console.log("IM HERE1!@#!@#@!#");
-    console.log(request.url)
     let currentUser = request.url.split("?")[1];
+    let fileName = "";
     const form = formidable({});
     let fields;
     let files;
-    let newDatabase = [];
     try {
-        //console.log(request.url.split("?")[1])
-        // form.on("fileBegin", (name, files) => {
-        //     files.filepath = path.join(__dirname, "photos", request.url.split("?")[1], files.originalFilename);
-        // })
-        // form.on("file", () => {
-        //     console.log("uploaded");
-        // })
-        // [fields, files] = await form.parse(request);
-
-        // console.log("fields:" + JSON.stringify(fields));
-        // console.log("files:" + JSON.stringify(files));
         form.on("fileBegin", (name, file) => {
-            file.filepath = __dirname+`/photos/${currentUser}/`+ file.originalFilename;
+            file.filepath = path.join(__dirname, "photos", currentUser, file.originalFilename);
+            fileName = file.originalFilename;
         })
         form.on("end", (name, file) => {
-            fs.readFile(dbPath, "utf-8")
-            .then ((database) => {
-                newDatabase = JSON.parse(database);
-                let currentUserIndex = newDatabase.findIndex((element) => (element.username === currentUser))
-                //console.log(currentUserIndex)
-                newDatabase[currentUserIndex].photos.push(files.uploadedImage[0].originalFilename);
-                // userArray.forEach((userObj) => {
-                //     if (userObj.username === currentUser){
-                //         userObj.photos.push(files.uploadedImage[0].originalFilename);
-                //         newDatabase.push(userObj);
-                //     } else {
-                //         newDatabase.push(userObj);
-                //     }
-                // })
-            })
-            .then(() => console.log("my new database is " + JSON.stringify(newDatabase)))
-            .then(() => fs.writeFile(dbPath, JSON.stringify(newDatabase, null, 2)))
-            .catch((err) => console.log(err))
+            try{
+                helper.uploadImage(currentUser, fileName);
+            } catch (err) {
+                console.log(err)
+            }
         })
         console.log(fields);
         [fields, files] = await form.parse(request)
@@ -704,15 +676,16 @@ const controller = {
   getPhoto: async (request, response) => {
     //console.log(request.url)
     let headerType = {};
-    if(path.extname(request.url) === ".jpeg"){
+    if(path.extname(request.url).toLowerCase() === ".jpeg"){
         headerType = {'Content-Type': 'image/jpeg'};
-    } else if (path.extname(request.url) === ".png"){
+    } else if (path.extname(request.url).toLowerCase() === ".png"){
         headerType = {'Content-Type': 'image/png'}
     }
     response.writeHead(200, headerType)
     const readImage = await createReadStream(__dirname + request.url).pipe(response);
     readImage.on("error", (err) => console.log(err));
     readImage.on("end", () => response.end());
+    return;
   }
 };
 

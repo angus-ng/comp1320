@@ -40,7 +40,7 @@ function handler(request, response) {
   //console.log(response.statusCode)
   console.log("THIS ONE:" + url);
   let { pathname } = parse(url, true);
-  if (path.extname(url) === ".png" || path.extname(url) === ".jpeg"){
+  if (path.extname(url).toLowerCase() === ".png" || path.extname(url).toLowerCase() === ".jpeg"){
     if (method === "GET"){
       pathname = "/photos";
     }
