@@ -12,11 +12,12 @@ const controller = {
     const userArray = await helper.readDatabase();
     const data = {userArr : userArray,
                 fn : helper.imgSrc};
-    const html = await helper.readFile((__dirname + "/views/home.ejs"), "utf-8");
-    const htmlRender = ejs.render(html, {filename: "home.ejs", data});
-    return response.end(htmlRender);
+      await ejs.renderFile((__dirname + "/views/home.ejs") , {filename: "home.ejs", data}, (err, result) =>{
+      response.writeHead(200, {'Content-Type': 'text/html'})
+      return response.end(result)
+      });
     } catch (err) {
-    console.error(err);
+    console.error(err); 
     response.writeHead(err.httpCode || 404, {'Content-Type': MIME.txt})
     return response.end(String(err))
     }
@@ -41,9 +42,10 @@ const controller = {
     currentUser = userArray[helper.findUserIndex(currentUser, userArray)];
     const data = {user : currentUser,
                 fn : helper.imgSrc};
-    const html = await helper.readFile((__dirname + "/views/feed.ejs"), "utf-8");
-    const htmlRender = ejs.render(html, {filename: "feed.ejs", data});
-    return response.end(htmlRender);
+    await ejs.renderFile((__dirname + "/views/feed.ejs") , {filename: "feed.ejs", data}, (err, result) =>{
+      response.writeHead(200, {'Content-Type': 'text/html'})
+      return response.end(result);
+      });
     } catch (err) {
         console.error(err);
         response.writeHead(err.httpCode || 404, {'Content-Type': MIME.txt})
